@@ -1,0 +1,65 @@
+        ORG 0
+MAIN    MOVE BLOK, R1
+        MOVE 10000, SP
+        MOVE 1000, R5
+LOOP    LOADH R2, (R1)
+        LOADH R3, (R1+2)
+        ADD R1, 4, R1
+        CMP R2, 8000
+        JP_NE DALJE
+        CMP R3, 8000
+        JP_EQ END
+DALJE           ;TU TREBAM PROSIRITI
+        MOVE R2, R4
+        SHR R4,15,R4
+        CMP R4, 0
+        JP_NE NEG
+POZOVI  
+        PUSH R2
+        PUSH R3
+        CALL COMP
+        STORE R0, (R5)
+        ADD R7, 8, R7
+        ADD R5,4,R5
+        JP LOOP
+
+NEG     MOVE R2, R4
+        OR R4, 0FFFF0000, R4
+        MOVE R4, R2
+        JP POZOVI
+COMP    
+        PUSH R1
+        PUSH R3
+        PUSH R4
+        MOVE 0, R0
+        MOVE 4, R3
+        MOVE 0, R4
+PETLJA  
+        CMP R3,0
+        JP_EQ VRATI
+        LOAD R1, (SP + 10)
+        LOAD R2, (SP + 14)
+        SUB R3, 1, R3
+        ROTR R1, R4, R1
+        ROTR R1, R4, R1
+
+        ADD R4, 8, R4     ;MIJENJAM OFFSET
+
+        AND R1, 0FF, R1
+        AND R2, 0FF, R2
+        CMP R1,R2
+        JP_EQ ISTI
+        ROTR R0, 8, R0
+        ADD R0, 0BB, R0
+        JP PETLJA
+ISTI    ROTR R0, 8, R0
+        ADD R0, 0AA, R0
+        JP PETLJA
+VRATI   ROTR R0, 8, R0
+        POP R4
+        POP R3
+        POP R1
+        RET
+
+END     HALT
+BLOK    DW  4321432C, 00FF7DBA, 548BB78B, 0BADADEDA, 7C8A1B39, 80008000

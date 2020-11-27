@@ -1,0 +1,32 @@
+NUM     EQU     50
+        ;INIT
+        ORG     0
+        MOVE    NUM, R6
+        MOVE    SOURCE, R1
+        MOVE    DEST, R0
+
+LOOP    LOAD    R2, (R1)
+        ADD     R1, 4, R1
+        ;DO STUFF
+        ;R2 IS THE 32-BIT 2'K NUMBER
+        MOVE    R2, R3
+        MOVE    8000, R4
+        CMP     R2, 0
+        JP_P    SAVE
+        ;DEALING WITH NEGATIVE NUMBERS
+        XOR     R3, R3, R3   
+        ;FINISH DOING STUFF
+SAVE    STORE   R3, (R0)
+        STOREH  R4, (R0+4)
+        ADD     R0, 6, R0
+        SUB     R6, 1, R6
+        CMP     R6,0
+        JP_Z    END
+        JP      LOOP
+
+END     HALT
+
+        ORG     10000
+SOURCE  DW      0FFFFF
+        ORG     20000
+DEST    DS      800

@@ -1,0 +1,10 @@
+ORG 0
+        LOAD    R0, 100
+        SHR     R0,1,R0
+        AND     R0, %B 1111, R1
+        CMP     R1, %B 1111
+        JP_NE   OBRISI
+        .....
+        
+
+    
